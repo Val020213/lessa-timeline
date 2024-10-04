@@ -1,8 +1,5 @@
-from streamlit_timeline import st_timeline
-
-# Streamlit Timeline Component Example
-
 import streamlit as st
+from streamlit_timeline import st_timeline
 from streamlit import set_page_config
 
 
