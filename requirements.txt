@@ -1,3 +1,2 @@
 streamlit
-setuptools
-streamlit-vis-timeline
+streamlit-timeline
