@@ -1,10 +1,7 @@
-import base64
 import streamlit as st
 from streamlit_timeline import timeline
 import streamlit as st
-import pandas as pd
-from io import StringIO
-from PIL import Image
+import json
 
 
 def main():
@@ -37,13 +34,6 @@ def main():
             key="timeline_title_description",
             help="Escribe una descripción de tu timeline",
             value="",
-        )
-
-        st.text_input(
-            "Caption de la imagen",
-            key="timeline_title_image_caption",
-            value="",
-            help="Caption de la imagen",
         )
 
         st.button(
@@ -141,15 +131,24 @@ def main():
             on_click=upload_event,
         )
 
+        st.download_button(
+            label="Descargar JSON",
+            use_container_width=True,
+            file_name="timeline.json",
+            help="Descarga el JSON de la timeline",
+            data=json.dumps(st.session_state.timeline),
+        )
+
     else:
         st.warning("Please submit the timeline form to see the timeline.")
 
         def upload_file():
             if st.session_state.file:
                 try:
-                    st.session_state.timeline = st.session_state.file
+                    file_content = st.session_state.file.read()
+                    st.session_state.timeline = json.loads(file_content)
                 except Exception as e:
-                    st.error(f"Error: {e}, please fill the form correctly.")
+                    st.error(f"Error: {e}, please upload a valid JSON file.")
 
         st.file_uploader(
             label="Upload JSON file",
@@ -159,24 +158,8 @@ def main():
             on_change=upload_file,
         )
 
-    def download_json():
-        if st.session_state.timeline:
-            st.download_button(
-                label="Download JSON",
-                data=st.session_state.timeline,
-                file_name="timeline.json",
-                mime="application/json",
-            )
-
-    st.button(
-        label="Descargar JSON",
-        use_container_width=True,
-        help="Descarga el JSON de la timeline",
-        on_click=download_json,
-    )
-
 
 if __name__ == "__main__":
-    st.set_page_config(page_title="Lessa Story Timeline", layout="wide")
+    st.set_page_config(page_title="Lessa Story Timeline", layout="wide", page_icon="📅")
 
     main()
